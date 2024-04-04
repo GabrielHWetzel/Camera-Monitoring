@@ -39,17 +39,19 @@ while True:
             # Save Image
             cv2.imwrite(f"images/{count}.png", frame)
             count = count + 1
-            all_images = glob("images/*.png")
+            all_frames = glob("images/*.png")
+            index = int(len(all_frames)/2)
+            target_frame = all_frames[index]
 
     # Check if object left the image
     status_list.append(status)
     status_list = status_list[-2:]
-
     # Send email on exit image
     if status_list == [1, 0]:
-        print(send_email(frame))
+        send_email(target_frame)
         for image in glob("images/*.png"):
             os.remove(image)
+
     # Shows camera
     cv2.imshow("Camera", frame)
     # Quit key
