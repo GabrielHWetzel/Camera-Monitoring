@@ -5,6 +5,14 @@ import cv2
 from emailing import send_email
 from threading import Thread
 
+
+def clean_folder():
+    print("clean_folder started")
+    for image in glob("frames/*.png"):
+        os.remove(image)
+    print("clean_folder ended")
+
+
 video = cv2.VideoCapture(0)
 time.sleep(1)
 
@@ -50,6 +58,7 @@ while True:
     # Send email on exit image
     if status_list == [1, 0]:
         # Prepare thread
+        print(target_frame)
         email_thread = Thread(target=send_email, args=(target_frame, ))
         email_thread.daemon = True
         email_thread.start()
@@ -61,3 +70,4 @@ while True:
     if key == ord("q"):
         break
 video.release()
+clean_folder()

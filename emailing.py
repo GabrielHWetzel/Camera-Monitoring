@@ -31,12 +31,4 @@ def send_email(image):
     gmail.sendmail(EMAIL, EMAIL, email_message.as_string())
 
     gmail.quit()
-    clean_folder()
     print("send_email ended")
-
-
-def clean_folder():
-    print("clean_folder started")
-    for image in glob("frames/*.png"):
-        os.remove(image)
-    print("clean_folder ended")
