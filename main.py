@@ -1,8 +1,9 @@
-import time
-from emailing import send_email
-import cv2
-from glob import glob
 import os
+from glob import glob
+import time
+import cv2
+from emailing import send_email
+from threading import Thread
 
 video = cv2.VideoCapture(0)
 time.sleep(1)
@@ -37,9 +38,9 @@ while True:
         if rectangle.any():
             status = 1
             # Save Image
-            cv2.imwrite(f"images/{count}.png", frame)
+            cv2.imwrite(f"frames/{count}.png", frame)
             count = count + 1
-            all_frames = glob("images/*.png")
+            all_frames = glob("frames/*.png")
             index = int(len(all_frames)/2)
             target_frame = all_frames[index]
 
@@ -48,9 +49,10 @@ while True:
     status_list = status_list[-2:]
     # Send email on exit image
     if status_list == [1, 0]:
-        send_email(target_frame)
-        for image in glob("images/*.png"):
-            os.remove(image)
+        # Prepare thread
+        email_thread = Thread(target=send_email, args=(target_frame, ))
+        email_thread.daemon = True
+        email_thread.start()
 
     # Shows camera
     cv2.imshow("Camera", frame)

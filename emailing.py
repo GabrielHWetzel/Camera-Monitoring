@@ -1,4 +1,5 @@
 import os
+from glob import glob
 import smtplib
 from email.message import EmailMessage
 import imghdr
@@ -9,6 +10,7 @@ PASSWORD = os.getenv("PASSWORD")
 
 
 def send_email(image):
+    print("send_email started")
     now = datetime.now().strftime("%H:%M:%S")
 
     # Email contents
@@ -29,3 +31,12 @@ def send_email(image):
     gmail.sendmail(EMAIL, EMAIL, email_message.as_string())
 
     gmail.quit()
+    clean_folder()
+    print("send_email ended")
+
+
+def clean_folder():
+    print("clean_folder started")
+    for image in glob("frames/*.png"):
+        os.remove(image)
+    print("clean_folder ended")
